@@ -1,0 +1,27 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/*.php-slow.log
+    fields:
+      group: "${FILEBEAT_LOG_GROUP}"
+      stream: "php-fpm-slow-log"
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    scan_frequency: 2s
+    multiline.negate: true
+    multiline.match: after
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/php/fpm-php.www.log
+    fields:
+      group: "${FILEBEAT_LOG_GROUP}"
+      stream: "php-fpm-log"
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    scan_frequency: 2s
+    multiline.negate: true
+    multiline.match: after
+
+output.logstash:
+  hosts: ["${FILEBEAT_LOGSTASH_HOST}"]

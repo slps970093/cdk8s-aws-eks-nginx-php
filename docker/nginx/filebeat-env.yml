@@ -1,0 +1,28 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nginx/site-access.log
+    fields:
+      group: "${FILEBEAT_LOG_GROUP}"
+      stream: "nginx-site-access-log"
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    scan_frequency: 2s
+    multiline.negate: true
+    multiline.match: after
+
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nginx/site-access.log
+      - /var/log/nginx/error.log
+    fields:
+      group: "${FILEBEAT_LOG_GROUP}"
+      stream: "nginx-error-log"
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    scan_frequency: 2s
+    multiline.negate: true
+    multiline.match: after
+
+output.logstash:
+  hosts: ["${FILEBEAT_LOGSTASH_HOST}"]
